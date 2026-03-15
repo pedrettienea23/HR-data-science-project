@@ -1,0 +1,39 @@
+
+--- attrition_modeling.ipynb ---
+IMG [3]: attrition_modeling_0.png
+IMG [5]: attrition_modeling_1.png
+
+--- data_cleaning.ipynb ---
+MD [6]: Typo in 'Data Analyst '
+MD [8]: # NaNs
+MD [11]: So many NaN values in 'DateofTermination' likely means that those employer are still active
+MD [17]: Impossible to impute the correct 'ManagerID'. Those 8 rows will be dropped
+MD [20]: All good!
+MD [21]: # Outliers
+IMG [22]: data_cleaning_0.png
+MD [23]: Salaries and engagement have outliers, but they should not be removed
+
+--- EDA.ipynb ---
+IMG [3]: EDA_0.png
+IMG [4]: EDA_1.png
+MD [5]: # Salaries and engagement
+IMG [6]: EDA_2.png
+MD [9]: # Performance
+MD [13]: # Salaries
+IMG [14]: EDA_3.png
+IMG [15]: EDA_4.png
+IMG [16]: EDA_5.png
+IMG [17]: EDA_6.png
+MD [19]: # Statistical testing for discrimination
+MD [20]: ## Races and sex
+MD [23]: ## Marital status
+IMG [27]: EDA_7.png
+MD [28]: # Managers and department
+IMG [29]: EDA_8.png
+IMG [30]: EDA_9.png
+MD [33]: # managers attrition
+
+--- performance_driver_analysis.ipynb ---
+IMG [3]: performance_driver_analysis_0.png
+
+--- talent_risk_reward.ipynb ---
