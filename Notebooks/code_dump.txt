@@ -1,0 +1,246 @@
+--- CELL 0 ---
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy import stats
+import statsmodels.api as sm
+from statsmodels.formula.api import ols
+from statsmodels.stats.multicomp import pairwise_tukeyhsd
+--- CELL 1 ---
+df = pd.read_csv('../Data/HRDataset_v14.csv')
+df.head()
+--- CELL 2 ---
+df['DateofHire'] = pd.to_datetime(df['DateofHire'], errors='coerce')
+df['DateofTermination'] = pd.to_datetime(df['DateofTermination'], errors='coerce')
+--- CELL 4 ---
+df[['Salary', 'EngagementSurvey']].corr()
+--- CELL 5 ---
+plt.figure(figsize=(10, 6))
+sns.scatterplot(data=df, x='Salary', y='EngagementSurvey')
+plt.title('Salary vs. Engagement Survey')
+plt.show()
+--- CELL 6 ---
+df.groupby('Department')[['Salary', 'EngagementSurvey']].corr().iloc[0::2,-1]
+--- CELL 7 ---
+sns.lmplot(data=df, x='Salary', y='EngagementSurvey', col='Department', col_wrap=3, height=3)
+--- CELL 8 ---
+sns.lmplot(data=df, x='Salary', y='EmpSatisfaction', col='Department', col_wrap=3, height=3)
+df.groupby('Department')[['Salary', 'EmpSatisfaction']].corr().iloc[0::2,-1]
+--- CELL 10 ---
+df['PerfScoreID'].unique()
+--- CELL 11 ---
+sns.lmplot(data=df, x='Salary', y='PerfScoreID', col='Department', col_wrap=3, height=3)
+df.groupby('Department')[['Salary', 'PerfScoreID']].corr().iloc[0::2,-1]
+--- CELL 12 ---
+sns.lmplot(data=df, x='EngagementSurvey', y='PerfScoreID', col='Department', col_wrap=3, height=3)
+df.groupby('Department')[['EngagementSurvey', 'PerfScoreID']].corr().iloc[0::2,-1]
+--- CELL 13 ---
+sns.lmplot(data=df, x='EmpSatisfaction', y='PerfScoreID', col='Department', col_wrap=3, height=3)
+df.groupby('Department')[['EmpSatisfaction', 'PerfScoreID']].corr().iloc[0::2,-1]
+--- CELL 14 ---
+df[['Salary','EngagementSurvey','EmpSatisfaction','PerfScoreID']].corr()
+--- CELL 16 ---
+df['Position'] = df['Position'].str.strip()
+salary_by_pos_mean = df.groupby('Position')['Salary'].mean().sort_values(ascending=False)
+
+plt.figure(figsize=(10, 12))
+salary_by_pos_mean.plot(kind='barh', color='skyblue')
+plt.axvline(df['Salary'].mean(), color='red', linestyle='--', label=f"Company Avg: ${df['Salary'].mean():.0f}")
+plt.title('Average Salary by Position', fontsize=15)
+plt.xlabel('Salary ($)')
+plt.ylabel('Position')
+plt.legend()
+plt.tight_layout()
+plt.show()
+--- CELL 17 ---
+salary_by_race = df.groupby('RaceDesc')['Salary'].mean().sort_values(ascending=False)
+plt.figure(figsize=(10, 6))
+salary_by_race.plot(kind='barh', color='salmon')
+plt.axvline(df['Salary'].mean(), color='red', linestyle='--', label=f"Company Avg: ${df['Salary'].mean():.0f}")
+plt.title('Average Salary by Race', fontsize=15)
+plt.xlabel('Salary ($)')
+plt.ylabel('Race')
+plt.legend()
+plt.tight_layout()
+plt.show()
+--- CELL 18 ---
+salary_by_sex = df.groupby('Sex')['Salary'].mean().sort_values(ascending=False)
+plt.figure(figsize=(8, 4))
+salary_by_sex.plot(kind='barh', color='orchid')
+plt.axvline(df['Salary'].mean(), color='red', linestyle='--', label=f"Company Avg: ${df['Salary'].mean():.0f}")
+plt.title('Average Salary by Sex', fontsize=15)
+plt.xlabel('Salary ($)')
+plt.ylabel('Sex')
+plt.legend()
+plt.tight_layout()
+plt.show()
+--- CELL 19 ---
+plt.figure(figsize=(12, 8))
+sns.barplot(data=df, x='Salary', y='RaceDesc', hue='Sex', estimator=np.mean, errorbar=None, palette='muted')
+
+plt.axvline(df['Salary'].mean(), color='black', linestyle='--', label='Global Average')
+plt.title('Salary Breakdown by Race and Sex', fontsize=15)
+plt.legend(title='Sex', loc='lower right')
+plt.tight_layout()
+plt.show()
+--- CELL 20 ---
+combined_summary = df.groupby(['RaceDesc', 'Sex'])['Salary'].agg(['count', 'mean', 'median'])
+combined_summary = combined_summary.sort_values(['RaceDesc', 'mean'], ascending=[True, False]).round(2)
+print("\nDetailed Salary Summary (Race & Sex):")
+print(combined_summary)
+--- CELL 23 ---
+df['Sex'] = df['Sex'].str.strip()
+df['RaceDesc'] = df['RaceDesc'].str.strip()
+
+def salaries_stat_testing(group_a, group_b, label):
+    # Shapiro-Wilk
+    _, p_norm_a = stats.shapiro(group_a)
+    _, p_norm_b = stats.shapiro(group_b)
+
+    if p_norm_a > 0.05 and p_norm_b > 0.05:
+        # Normal -> Parametric test
+        _, p_val = stats.ttest_ind(group_a, group_b, nan_policy='omit')
+        method = "T-test"
+    else:
+        # Not normal -> Non-paramtric test
+        _, p_val = stats.mannwhitneyu(group_a, group_b)
+        method = "Mann-Whitney U"
+
+    return {
+        "Comparison": label,
+        "Method": method,
+        "P-Value": round(p_val, 4),
+    }
+
+# Whites vs blacks
+whites = df[df['RaceDesc'] == 'White']['Salary']
+blacks = df[df['RaceDesc'] == 'Black or African American']['Salary']
+
+# White men vs white women
+men_whites = df[(df['RaceDesc'] == 'White') & (df['Sex'] == 'M')]['Salary']
+women_white = df[(df['RaceDesc'] == 'White') & (df['Sex'] == 'F')]['Salary']
+
+# Black men vs black women
+men_blacks = df[(df['RaceDesc'] == 'Black or African American') & (df['Sex'] == 'M')]['Salary']
+women_black = df[(df['RaceDesc'] == 'Black or African American') & (df['Sex'] == 'F')]['Salary']
+
+results = [
+    salaries_stat_testing(whites, blacks, "whites vs blacks"),
+    salaries_stat_testing(men_whites, women_white, "men vs women (whites)"),
+    salaries_stat_testing(men_blacks, women_black, "men vs women (blacks)")
+]
+
+df_results = pd.DataFrame(results)
+print(df_results)
+--- CELL 24 ---
+target_pos = 'Production Technician I'
+race_filter = 'Black or African American'
+
+sub_df = df[(df['RaceDesc'] == race_filter) & (df['Position'] == target_pos)]
+
+summary = sub_df.groupby('Sex')['Salary'].agg(['count', 'mean', 'median'])
+print(f"Comparison for {target_pos} ({race_filter} only):")
+print(summary)
+--- CELL 26 ---
+df['MaritalStatusID'].unique()
+--- CELL 27 ---
+df['MaritalDesc'].unique()
+--- CELL 28 ---
+df['MarriedID'].unique()
+--- CELL 29 ---
+df['is_married'] = df['MaritalDesc'].apply(lambda x: 'Married' if x == 'Married' else 'Not Married')
+
+def automated_stat_test_simplified(data, value_col, group_col):
+    groups = [group[value_col].dropna() for name, group in data.groupby(group_col)]
+    if len(groups) < 2: return
+    
+    normality_p = [stats.shapiro(g)[1] for g in groups if len(g) >= 3]
+    is_normal = all(p > 0.05 for p in normality_p)
+    
+    levene_p = stats.levene(*groups)[1]
+    is_homoscedastic = levene_p > 0.05
+    
+    if is_normal and is_homoscedastic:
+        formula = f'{value_col} ~ C({group_col})'
+        model = ols(formula, data=data).fit()
+        anova_table = sm.stats.anova_lm(model, typ=2)
+        p_val = anova_table['PR(>F)'].iloc[0]
+        test_name = "ANOVA"
+    else:
+        h_stat, p_val = stats.kruskal(*groups)
+        test_name = "Kruskal-Wallis"
+    
+    print(f"Metric: {value_col} | Test: {test_name} | P-Value: {p_val:.4f}")
+
+metrics = ['Salary']
+
+for sex in ['M', 'F']:
+    print(f"\n--- Analysis for {sex} Employees ---")
+    sub_df = df[df['Sex'].str.strip() == sex]
+    for metric in metrics:
+        automated_stat_test_simplified(sub_df, metric, 'is_married')
+
+plt.figure(figsize=(10, 6))
+sns.pointplot(data=df, x='is_married', y='Salary', hue='Sex', markers=["o", "s"], linestyles=["-", "--"])
+plt.title('Marriage Premium Analysis: Salary by Marital Status and Sex')
+plt.show()
+--- CELL 31 ---
+metrics = ['Salary', 'PerfScoreID', 'EngagementSurvey', 'EmpSatisfaction']
+titles = ['Average Salary', 'Average Performance Score', 'Average Engagement Survey', 'Average Employee Satisfaction']
+
+fig, axes = plt.subplots(2, 2, figsize=(16, 12))
+axes = axes.flatten()
+
+for i, metric in enumerate(metrics):
+    order = df.groupby('ManagerID')[metric].mean().sort_values(ascending=False).index
+    sns.barplot(data=df, x='ManagerID', y=metric, order=order, palette='viridis', ax=axes[i], hue='ManagerID', legend=False)
+    axes[i].set_title(titles[i], fontsize=14)
+    axes[i].tick_params(axis='x', rotation=45)
+
+plt.tight_layout()
+--- CELL 32 ---
+fig, axes = plt.subplots(2, 2, figsize=(16, 12))
+axes = axes.flatten()
+
+for i, metric in enumerate(metrics):
+    order = df.groupby('Department')[metric].mean().sort_values(ascending=False).index
+    sns.barplot(data=df, x='Department', y=metric, order=order, palette='magma', ax=axes[i], hue='Department', legend=False)
+    axes[i].set_title(titles[i], fontsize=14)
+    axes[i].tick_params(axis='x', rotation=45)
+
+plt.tight_layout()
+--- CELL 33 ---
+def automated_stat_test(data, value_col, group_col):
+    groups = [group[value_col].dropna() for name, group in data.groupby(group_col)]
+    
+    normality_p = [stats.shapiro(g)[1] for g in groups if len(g) >= 3]
+    is_normal = all(p > 0.05 for p in normality_p)
+    
+    levene_p = stats.levene(*groups)[1]
+    is_homoscedastic = levene_p > 0.05
+    
+    print(f"\nMetric: {value_col} | Group: {group_col}")
+    
+    if is_normal and is_homoscedastic:
+        formula = f'{value_col} ~ C({group_col})'
+        model = ols(formula, data=data).fit()
+        anova_table = sm.stats.anova_lm(model, typ=2)
+        p_val = anova_table['PR(>F)'].iloc[0]
+        
+        print(f"Test: ANOVA (Parametric) | P-Value: {p_val:.4f}")
+        if p_val < 0.05:
+            tukey = pairwise_tukeyhsd(endog=data[value_col], groups=data[group_col], alpha=0.05)
+            print(tukey.summary())
+    else:
+        h_stat, p_val = stats.kruskal(*groups)
+        print(f"Test: Kruskal-Wallis (Non-Parametric) | P-Value: {p_val:.4f}")
+        if p_val < 0.05:
+            print("Significant differences found. Consider running a Dunn post-hoc test.")
+
+metrics = ['PerfScoreID', 'EngagementSurvey', 'EmpSatisfaction']
+for metric in metrics:
+    automated_stat_test(df, metric, 'Department')
+--- CELL 34 ---
+for metric in metrics:
+    automated_stat_test(df, metric, 'ManagerID')
