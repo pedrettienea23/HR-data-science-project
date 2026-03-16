@@ -240,7 +240,7 @@ Both models were trained on the same feature set and evaluated under identical c
 | Logistic Regression | 0.738 ± 0.055 | 0.632 ± 0.064 | 0.210 ± 0.026 |
 | Random Forest | 0.780 ± 0.049 | 0.625 ± 0.071 | 0.173 ± 0.019 |
 
-The Random Forest outperforms Logistic Regression on ROC-AUC (+0.042) and Brier Score (-0.037), with a narrower standard deviation on both, indicating more stable predictions across folds. The F1 scores are essentially tied (0.632 vs 0.625), but the better Brier score means the Random Forest's probability estimates are better calibrated, which matters for the risk scoring used in the Talent Risk Framework downstream. The attrition model saved to disk is the Random Forest.
+The Random Forest outperforms Logistic Regression on ROC-AUC (+0.042) and Brier Score (-0.037), with a narrower standard deviation on both, indicating more stable predictions across folds. The F1 scores are essentially tied (0.632 vs 0.625), but the better Brier score means the Random Forest's probability estimates are better calibrated, which matters for the risk scoring used in the Talent Risk Framework downstream.
 
 ![Attrition SHAP Plot (Random Forest)](images/attrition_modeling_1.png)
 
@@ -296,7 +296,7 @@ The Production Technician concentration at the top of the list is consistent wit
 
 **Pay below position average predicts attrition more than pay in absolute terms.** Employees who are paid below what their role peers earn are more likely to leave, regardless of whether their absolute salary is high or low. Salary benchmarking at the role level is a more effective retention tool than across-the-board increases.
 
-**No statistically significant race or sex discrimination in pay was found after controlling for position.** The raw gaps are real but are explained by role distribution. The OLS sex coefficient after controlling for department and position is -159 (p = 0.834), effectively zero. The one group that warrants monitoring is Black female employees in Production, not because the gap is statistically significant but because the sample sizes are large enough to detect a real difference if one emerges over time.
+**No statistically significant race or sex discrimination in pay was found after controlling for position.** The raw gaps are real but are explained by role distribution. The OLS sex coefficient after controlling for department and position is -$159 (p = 0.834), effectively zero. The one group that warrants monitoring is Black female employees in Production, not because the gap is statistically significant but because the sample sizes are large enough to detect a real difference if one emerges over time.
 
 **Production is the single largest organisational risk.** It has the highest attrition rate (39.7%), the most Stars-at-Risk employees, and two managers running attrition rates 22 percentage points above the departmental average. The department-level engagement Kruskal-Wallis test was non-significant (H=5.16, p=0.397), suggesting the problem is not that Production employees are less engaged than average; it is structural, likely driven by role characteristics, compensation levels, and manager-specific dynamics.
 
