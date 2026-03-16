@@ -189,6 +189,8 @@ Manager-level attrition deltas relative to their department baseline reveal more
 
 **Managers who reduce attrition below their department average:**
 
+![Average Metrics by Department](images/attrition_delta_manager.png)
+
 | Manager | Department | Team Attrition | Dept Average | Delta |
 |---|---|---|---|---|
 | Brian Champaigne | IT/IS | 0.0% | 20.0% | -20.0pp |
@@ -205,6 +207,7 @@ Manager-level attrition deltas relative to their department baseline reveal more
 
 These deltas are not adjusted for tenure composition or role mix within each team, so they should be treated as hypothesis-generating rather than causal estimates.
 
+![Average Metrics by Department](images/attrition_performance.png)
 ---
 
 ## Machine Learning Modelling
