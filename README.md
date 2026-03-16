@@ -119,11 +119,7 @@ The first step was to look at raw average salaries by race and sex.
 
 ![Average Salary by Race](images/EDA_6.png)
 
-![Average Salary by Sex](images/EDA_7.png)
-
 Hispanic employees show the highest average salary in the race breakdown, and Black or African American employees come second. Women show a marginally higher average salary than men across the full company. Neither of these raw figures should be interpreted as evidence of anything without controlling for role.
-
-![Salary Breakdown by Race and Sex](images/EDA_8.png)
 
 The breakdown by race and sex reveals a pattern that the aggregated bars conceal. Black male employees have a mean salary of $85,066 compared to $66,963 for Black female employees, a $18,102 gap. White female employees average $68,847 vs $65,334 for White male employees. The full summary:
 
@@ -165,7 +161,7 @@ To verify this directly: among Black employees in the Production Technician I ro
 
 **Marital status and sex:**
 
-![Salary by Marital Status and Sex](images/EDA_9.png)
+![Average Salary by Sex](images/EDA_7.png)
 
 An OLS regression with a full `MaritalDesc × Sex` interaction was run to test whether marital status interacts with sex to produce salary differences. Results:
 
@@ -183,9 +179,9 @@ No term is significant. Marital status does not predict salary and does not inte
 
 Average salary, performance, engagement, and satisfaction were compared across managers and departments.
 
-![Average Metrics by Manager](images/EDA_10.png)
+![Salary Breakdown by Race and Sex](images/EDA_8.png)
 
-![Average Metrics by Department](images/EDA_11.png)
+![Average Metrics by Department](images/EDA_9.png)
 
 Formal significance tests (Chi-squared for discrete metrics, Kruskal-Wallis for engagement) found no statistically significant differences in performance or satisfaction across departments or managers after accounting for expected cell frequency constraints. The Kruskal-Wallis H for engagement across departments was 5.16 (p = 0.397), and across managers was 21.34 (p = 0.500). Visually, the Executive Office stands out on salary due to a single high-earning individual, not a systematic pattern.
 
