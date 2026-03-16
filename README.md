@@ -18,7 +18,7 @@ A weighted Random Forest Classifier trained to predict termination, evaluated on
 
 ![Attrition SHAP Plot](images/attrition_modeling_1.png)
 
-Tenure is the dominant signal: employees who have been with the company for longer carry the highest attrition risk, a counterintuitive finding that likely reflects accumulated dissatisfaction or stagnation over time. Relative pay comes next: employees paid below the average for their specific role leave at higher rates regardless of their absolute salary. The gap between how engaged an employee feels and how they actually perform, combined with a high ratio of absences to job satisfaction, both add meaningful signal, confirming that disengagement and dissatisfaction compound flight risk beyond compensation alone.
+Tenure is the dominant signal: employees who have been with the company for longer carry the highest attrition risk, a counterintuitive finding that likely reflects accumulated dissatisfaction or stagnation over time. The absence-satisfaction ratio comes next: employees who accumulate absences relative to their job satisfaction score are significantly more likely to leave. The engagement-performance gap and raw absence count add further signal, and relative pay also contributes, confirming that disengagement and dissatisfaction compound flight risk beyond compensation alone.
 
 ---
 
