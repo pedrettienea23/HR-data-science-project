@@ -52,7 +52,7 @@ The dataset contains several ordinal variables (employee satisfaction is scored 
 
 ![Spearman Correlation Heatmap](images/EDA_0.png)
 
-The heatmap shows a few things worth noting. Engagement survey scores and performance scores have a moderate positive correlation (rho = 0.38), which is the strongest signal in the matrix and is confirmed later at the department level. Days late in the last 30 days is negatively correlated with both engagement (rho = -0.43) and performance (rho = -0.68), suggesting lateness is more a symptom of disengagement than an independent driver of poor performance. Salary and number of special projects share the strongest correlation in the matrix (rho = 0.51), which reflects that higher-paid, senior employees are more likely to be assigned to special projects. Most other correlations are weak, which means the features are largely independent, a useful property for modelling.
+The heatmap shows a few things worth noting. Engagement survey scores and performance scores have a moderate positive correlation (rho = 0.38), which is the strongest signal in the matrix and is confirmed later at the department level. Days late in the last 30 days correlates more strongly with performance (rho = -0.68) than with engagement (rho = -0.43), but the fact that both correlations are substantial suggests lateness is a symptom of broader disengagement rather than an independent cause of poor output. Salary and number of special projects share the strongest correlation in the matrix (rho = 0.51), which reflects that higher-paid, senior employees are more likely to be assigned to special projects. Most other correlations are weak, which means the features are largely independent, a useful property for modelling.
 
 ---
 
